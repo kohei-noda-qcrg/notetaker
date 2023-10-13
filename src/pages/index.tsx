@@ -5,6 +5,7 @@ import React from "react";
 import { useState } from "react";
 
 import { Header } from "~/components/Header";
+import { NoteEditor } from "~/components/NoteEditor";
 import { api, type RouterOutputs } from "~/utils/api";
 
 const Home: NextPage = () => {
@@ -24,12 +25,12 @@ const Home: NextPage = () => {
 };
 export default Home;
 
-type Topic = RouterOutputs["topic"]["getAll"][0]
+type Topic = RouterOutputs["topic"]["getAll"][0];
 
 const Content: React.FC = () => {
   const { data: sessionData } = useSession();
 
-  const [selectedTopic, setSelectedTopic ] = useState<Topic | null>(null);
+  const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
 
   const { data: topics, refetch: refetchTopics } = api.topic.getAll.useQuery(
     undefined, // no input
@@ -37,13 +38,28 @@ const Content: React.FC = () => {
       enabled: sessionData?.user !== undefined,
       onSuccess: (data: Topic[]) => {
         setSelectedTopic(selectedTopic ?? data[0] ?? null);
-      }
+      },
     },
   );
 
   const createTopic = api.topic.create.useMutation({
     onSuccess: () => {
       void refetchTopics();
+    },
+  });
+
+  const { data: notes, refetch: refetchNotes } = api.note.getAll.useQuery(
+    {
+      topicId: selectedTopic?.id ?? "",
+    },
+    {
+      enabled: sessionData?.user !== undefined && selectedTopic !== null,
+    },
+  );
+
+  const createNote = api.note.create.useMutation({
+    onSuccess: () => {
+      void refetchNotes();
     },
   });
 
@@ -78,7 +94,17 @@ const Content: React.FC = () => {
           }}
         />
       </div>
-      <div className="col-span-3"></div>
+      <div className="col-span-3">
+        <NoteEditor
+          onSave={({ title, content }) => {
+            void createNote.mutate({
+              title,
+              content,
+              topicId: selectedTopic?.id ?? "",
+            });
+          }}
+        />
+      </div>
     </div>
   );
 };
