@@ -1,6 +1,6 @@
 # Notetaker
 
-Originally this project is Jack Herrington's [Notetaker](https://github.com/jherr/notetaker) project. I'm using it as a learning project for [T3 Stack](https://create.t3.gg/) by watching [Jack's video](https://www.youtube.com/watch?v=J1gzN1SAhyM).
+Originally this project is Jack Herrington's [Notetaker](https://github.com/jherr/notetaker) project. I'm using this project as a learning project for [T3 Stack](https://create.t3.gg/) by watching [Jack's video](https://www.youtube.com/watch?v=J1gzN1SAhyM).
 
 ## Create T3 App
 
