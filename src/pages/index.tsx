@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { Header } from "~/components/Header";
 import { NoteEditor } from "~/components/NoteEditor";
+import { NoteCard } from "~/components/NoteCard";
 import { api, type RouterOutputs } from "~/utils/api";
 
 const Home: NextPage = () => {
@@ -63,6 +64,12 @@ const Content: React.FC = () => {
     },
   });
 
+  const deleteNote = api.note.delete.useMutation({
+    onSuccess: () => {
+      void refetchNotes();
+    },
+  });
+
   return (
     <div className="mx-5 mt-5 grid grid-cols-4 gap-2">
       <div className="px-2">
@@ -95,6 +102,17 @@ const Content: React.FC = () => {
         />
       </div>
       <div className="col-span-3">
+        <div className="col-span-3">
+          {notes?.map((note) => (
+            <NoteCard
+              key={note.topicId + note.id}
+              note={note}
+              onDelete={() => {
+                void deleteNote.mutate({ id: note.id });
+              }}
+            />
+          ))}
+        </div>
         <NoteEditor
           onSave={({ title, content }) => {
             void createNote.mutate({
