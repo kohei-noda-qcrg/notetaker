@@ -77,7 +77,9 @@ const Content: React.FC = () => {
           {topics?.map((topic: Topic) => (
             <li key={topic.id}>
               <a
-                className="btn btn-ghost rounded-btn btn-sm"
+                className={`btn btn-ghost rounded-btn btn-sm ${
+                  topic.id === selectedTopic?.id ? "border border-primary" : ""
+                }`}
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
