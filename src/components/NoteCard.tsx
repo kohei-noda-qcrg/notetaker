@@ -2,9 +2,7 @@ import { useState } from "react";
 
 import ReactMarkdown from "react-markdown";
 
-import { type RouterOutputs } from "~/utils/api";
-
-type Note = RouterOutputs["note"]["getAll"][0];
+import { type Note } from "~/types/note";
 
 export const NoteCard = ({
   note,
@@ -28,22 +26,18 @@ export const NoteCard = ({
           <div className="collapse-title text-xl font-bold">{note.title}</div>
           <div className="collapse-content">
             <article className="prose lg:prose-xl">
-              {" "}
               {/* prose: https://tailwindcss.com/docs/typography-plugin */}
               <ReactMarkdown>{note.content}</ReactMarkdown>
             </article>
           </div>
           <div className="card-actions mx-2 flex justify-end">
             <button
-              className="btn-primary btn-xs btn px-5"
+              className="btn btn-primary btn-xs px-5"
               onClick={() => onEdit(note)}
             >
               Edit
             </button>
-            <button
-              className="btn-warning btn-xs btn px-5"
-              onClick={onDelete}
-            >
+            <button className="btn btn-warning btn-xs px-5" onClick={onDelete}>
               Delete
             </button>
           </div>
