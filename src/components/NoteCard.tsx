@@ -18,12 +18,16 @@ export const NoteCard = ({
     <div className="border-gary-200 card mt-5 border bg-base-100 shadow-xl">
       <div className="card-body m-0 p-3">
         <div
-          className={`collapse-arrow ${
+          className={`collapse collapse-arrow ${
             isExpanded ? "collapse-open" : ""
-          } collapse`}
-          onClick={() => setIsExpanded(!isExpanded)}
+          }`}
         >
-          <div className="collapse-title text-xl font-bold">{note.title}</div>
+          <div
+            className="collapse-title text-xl font-bold"
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            {note.title}
+          </div>
           <div className="collapse-content">
             <article className="prose lg:prose-xl">
               {/* prose: https://tailwindcss.com/docs/typography-plugin */}
