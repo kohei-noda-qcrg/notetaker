@@ -7,7 +7,9 @@ import { useState } from "react";
 import { Header } from "~/components/Header";
 import { NoteEditor } from "~/components/NoteEditor";
 import { NoteCard } from "~/components/NoteCard";
-import { api, type RouterOutputs } from "~/utils/api";
+import { api } from "~/utils/api";
+import { type Note } from "~/types/note";
+import { type Topic } from "~/types/topic";
 
 const Home: NextPage = () => {
   return (
@@ -25,8 +27,6 @@ const Home: NextPage = () => {
   );
 };
 export default Home;
-
-type Topic = RouterOutputs["topic"]["getAll"][0];
 
 const Content: React.FC = () => {
   const { data: sessionData } = useSession();
@@ -58,6 +58,9 @@ const Content: React.FC = () => {
     },
   );
 
+  const [isEditingNote, setIsEditingNote] = useState(false);
+  const [selectingNote, setSelectingNote] = useState<Note | null>(null);
+
   const createNote = api.note.create.useMutation({
     onSuccess: () => {
       void refetchNotes();
@@ -69,6 +72,22 @@ const Content: React.FC = () => {
       void refetchNotes();
     },
   });
+
+  const updateNote = api.note.update.useMutation({
+    onSuccess: () => {
+      void refetchNotes();
+    },
+  });
+
+  const startEditingNote = (note: Note | null) => {
+    setIsEditingNote(true);
+    setSelectingNote(note);
+  };
+
+  const endEditingNote = () => {
+    setIsEditingNote(false);
+    setSelectingNote(null);
+  };
 
   return (
     <div className="mx-5 mt-5 grid grid-cols-4 gap-2">
@@ -112,18 +131,49 @@ const Content: React.FC = () => {
               onDelete={() => {
                 void deleteNote.mutate({ id: note.id });
               }}
+              onEdit={(note) => {
+                startEditingNote(note);
+              }}
             />
           ))}
         </div>
-        <NoteEditor
-          onSave={({ title, content }) => {
-            void createNote.mutate({
-              title,
-              content,
-              topicId: selectedTopic?.id ?? "",
-            });
-          }}
-        />
+        {isEditingNote && (
+          <NoteEditor
+            onSave={({ title, content }) => {
+              if (selectingNote === null) {
+                void createNote.mutate({
+                  title,
+                  content,
+                  topicId: selectedTopic?.id ?? "",
+                });
+              } else {
+                void updateNote.mutate({
+                  id: selectingNote.id,
+                  title,
+                  content,
+                });
+              }
+              endEditingNote();
+            }}
+            onCancel={() => {
+              endEditingNote();
+            }}
+            initialNote={selectingNote}
+          />
+        )}
+        {/* 中央にボタンを配置 */}
+        {!isEditingNote && (
+          <div className="mt-5 flex justify-center">
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                startEditingNote(null);
+              }}
+            >
+              New Note
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
