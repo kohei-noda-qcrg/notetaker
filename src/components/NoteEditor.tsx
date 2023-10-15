@@ -3,7 +3,7 @@ import { useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
-import { type Note } from "~/types/note";
+import { type Note } from "@prisma/client";
 
 export const NoteEditor = ({
   onSave,

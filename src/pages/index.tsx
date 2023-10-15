@@ -8,8 +8,7 @@ import { Header } from "~/components/Header";
 import { NoteEditor } from "~/components/NoteEditor";
 import { NoteCard } from "~/components/NoteCard";
 import { api } from "~/utils/api";
-import { type Note } from "~/types/note";
-import { type Topic } from "~/types/topic";
+import { type Note, type Topic } from "@prisma/client";
 
 const Home: NextPage = () => {
   return (
